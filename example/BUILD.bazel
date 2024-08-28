@@ -1,0 +1,39 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@rules_proto_grpc_python//:defs.bzl", "python_grpc_library")
+
+proto_library(
+    name = "example_proto",
+    srcs = ["example.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":dependency_proto",
+    ],
+)
+
+proto_library(
+    name = "dependency_proto",
+    srcs = ["dependency.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+    ],
+)
+
+python_grpc_library(
+    name = "example_protos_py",
+    output_mode = "NO_PREFIX_FLAT",
+    protos = [
+        ":example_proto",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+
+py_test(
+    name = "protobuf_test",
+    srcs = [
+        "protobuf_test.py",
+    ],
+    deps = [
+        ":example_protos_py",
+    ],
+)
